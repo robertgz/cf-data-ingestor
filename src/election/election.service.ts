@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ALL_AGENCIES } from './../shared/agencies';
 import { ApolloClientService } from './../shared/apollo-client';
 import { ElectionCommandOptions } from './election.command';
-import { GET_ELECTIONS } from './elections.gql-query';
+import { GET_ELECTIONS } from './download/elections.gql-query';
 
 const DESTINATION_URL = '';
 
@@ -46,4 +46,7 @@ export class ElectionService {
     //   console.error({ error });
     // }
   }
+
+  async getElections() {}
+  async setElections() {}
 }

@@ -5,13 +5,13 @@ export interface ElectionCommandOptions {
   agencyId: string;
 }
 
-// Run: node dist/apps/data-e-file/main election-update  -aid CSD-EFILE-e2uOVQqDJd
-// ts-node src/main.ts election-update -aid CSD-EFILE-e2uOVQqDJd
+// Run: node dist/apps/data-e-file/main election-update  -aid 12
+// ts-node src/main.ts election-update -aid 12
 
 @Command({
   name: 'election-update',
   description:
-    'Fetch a list of elections and perform a GraphQL mutation to the primary API.',
+    'Fetch a list of elections and perform a GraphQL mutation to the storage API.',
 })
 export class ElectionCommand extends CommandRunner {
   constructor(private readonly electionService: ElectionService) {
@@ -34,10 +34,10 @@ export class ElectionCommand extends CommandRunner {
   }
 
   @Option({
-    flags: '-aid, --agencyId <string>',
-    description: `Unique Id of the agency that combines the system name and a preset random string`,
+    flags: '-aid, --agencyId <number>',
+    description: `Unique integer Id of the agency that is generate by the database.`,
   })
-  id(val: string): string {
+  id(val: number): number {
     return val;
   }
 }
