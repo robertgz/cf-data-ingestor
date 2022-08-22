@@ -2,11 +2,11 @@ import { Command, CommandRunner, Option } from 'nest-commander';
 import { ElectionService } from './election.service';
 
 export interface ElectionCommandOptions {
-  agencyId: string;
+  agencyId: number;
 }
 
-// Run: node dist/apps/data-e-file/main election-update  -aid 12
-// ts-node src/main.ts election-update -aid 12
+// Run: node dist/apps/data-e-file/main election-update  -aid 1
+// ts-node src/main.ts election-update -aid 1
 
 @Command({
   name: 'election-update',
@@ -30,14 +30,14 @@ export class ElectionCommand extends CommandRunner {
       return;
     }
 
-    await this.electionService.updateElections(options);
+    await this.electionService.addElections(agencyId);
   }
 
   @Option({
     flags: '-aid, --agencyId <number>',
     description: `Unique integer Id of the agency that is generate by the database.`,
   })
-  id(val: number): number {
-    return val;
+  id(val: string): number {
+    return parseInt(val);
   }
 }

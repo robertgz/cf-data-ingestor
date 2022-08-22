@@ -5,11 +5,16 @@ import { SharedModule } from './../shared/shared.module';
 import { AgencyCommand } from './agency.command';
 import { AgencyService } from './agency.service';
 import { AgencyGetService } from './get/agency-get.service';
-import { AgencySetService } from './set/agency-set.service';
+import { AgencyStorageService } from './storage/agency-storage.service';
 
 @Module({
   imports: [HttpModule, ConfigModule, SharedModule],
-  providers: [AgencyCommand, AgencyService, AgencyGetService, AgencySetService],
-  exports: [],
+  providers: [
+    AgencyCommand,
+    AgencyService,
+    AgencyGetService,
+    AgencyStorageService,
+  ],
+  exports: [AgencyStorageService],
 })
 export class AgencyModule {}

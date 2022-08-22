@@ -1,32 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApolloClientService } from '../../shared/apollo-client';
-import { Agency, SourceAgency } from '../agency';
-import { SET_AGENCY } from './agency.gql-mutate';
+import { ELECTIONS_DOWNLOAD_QUERY } from './elections.gql-query';
 
 @Injectable()
-export class AgencySetService {
+export class ElectionDownloadService {
   constructor(
     private readonly apolloClientService: ApolloClientService,
     private configService: ConfigService,
   ) {}
 
-  private API_URL = this.configService.get<string>('urls.storage');
+  private API_URL = this.configService.get<string>('urls.download');
 
-  public async createAgency(agency: SourceAgency): Promise<Agency | null> {
-    if (!this.API_URL) return null;
-
+  public async getElections(
+    agencyUrl: string,
+  ): Promise<{ date: string; type: string }> {
     const graphqlUrl = `${this.API_URL}/graphql`;
 
     const client = await this.apolloClientService.getApolloClient(graphqlUrl);
 
-    const result = await client.mutate({
-      mutation: SET_AGENCY,
+    const result = await client.query({
+      query: ELECTIONS_DOWNLOAD_QUERY,
       variables: {
-        input: agency,
+        input: {
+          source: {
+            url: agencyUrl,
+          },
+        },
       },
     });
 
-    return result.data.createAgency;
+    return result.data.elections;
   }
 }
