@@ -11,7 +11,7 @@ export const SDEFILE_AGENCIES: Agency[] = [
     id: 'CSD-EFILE-e2uOVQqDJd',
     name: 'San Diego, City of',
     source: 'EFILE',
-    url: 'https://efile.sandiego.gov',
+    url: 'https://efile.sandiego.gov/public/search/campaign',
   },
 ];
 
