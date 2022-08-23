@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApolloClientService } from '../../shared/apollo-client';
+import { ElectionSource } from '../election';
 import { ELECTIONS_DOWNLOAD_QUERY } from './elections.gql-query';
 
 @Injectable()
@@ -12,9 +13,7 @@ export class ElectionDownloadService {
 
   private API_URL = this.configService.get<string>('urls.download');
 
-  public async getElections(
-    agencyUrl: string,
-  ): Promise<{ date: string; type: string }> {
+  public async getElections(agencyUrl: string): Promise<ElectionSource[]> {
     const graphqlUrl = `${this.API_URL}/graphql`;
 
     const client = await this.apolloClientService.getApolloClient(graphqlUrl);

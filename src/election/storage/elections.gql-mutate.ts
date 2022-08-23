@@ -1,12 +1,11 @@
 import gql from 'graphql-tag';
 
-// export const SET_ELECTION = gql`
-//   mutation Mutation($input: AgencyInput!) {
-//     createAgency(input: $input) {
-//       id
-//       name
-//       software
-//       url
-//     }
-//   }
-// `;
+export const STORE_ELECTION = gql`
+  mutation CreateElections($input: [ElectionInput!]) {
+    createElections(input: $input) {
+      id
+      date
+      type
+    }
+  }
+`;

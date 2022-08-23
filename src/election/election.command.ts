@@ -30,7 +30,14 @@ export class ElectionCommand extends CommandRunner {
       return;
     }
 
-    await this.electionService.addElections(agencyId);
+    const result = await this.electionService.addElections(agencyId);
+
+    if (result) {
+      console.log(
+        'Elections added to or already exist in storage for agency. ',
+      );
+      console.log(result);
+    }
   }
 
   @Option({
