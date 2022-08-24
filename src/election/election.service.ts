@@ -12,10 +12,7 @@ export class ElectionService {
     private readonly electionStorageService: ElectionStorageService,
   ) {}
 
-  // public async updateElections(options: ElectionCommandOptions) {
-  // }
-
-  public async addElections(agencyId: number) {
+  public async downloadAndStoreElections(agencyId: number) {
     const agency = await this.agencyStorageService.getAgency(agencyId);
 
     if (!agency) return;

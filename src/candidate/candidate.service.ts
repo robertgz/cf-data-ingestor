@@ -1,50 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { ALL_AGENCIES } from '../shared/agencies';
+import { AgencyStorageService } from 'src/agency/storage/agency-storage.service';
 import { ApolloClientService } from '../shared/apollo-client';
+import { CandidateDownload, CandidateInput } from './candidate';
 import { CandidateCommandOptions } from './candidate.command';
-import { GET_CANDIDATES } from './candidates.gql-query';
-
-const DESTINATION_URL = '';
-
-const SOURCE_URL = process.env.WEB_SCRAPER_API_GQL
-  ? process.env.WEB_SCRAPER_API_GQL
-  : 'http://localhost:3100/graphql';
+import { CandidateDownloadService } from './download/candidate-download.service';
 
 @Injectable()
 export class CandidateService {
-  constructor(private readonly apolloClientService: ApolloClientService) {}
+  constructor(
+    private readonly agencyStorageService: AgencyStorageService,
+    private readonly apolloClientService: ApolloClientService,
+    private readonly candidateDownloadService: CandidateDownloadService,
+  ) {}
 
   public async updateCandidates(options: CandidateCommandOptions) {
-    const client = await this.apolloClientService.getApolloClient(SOURCE_URL);
-
-    console.log({ SOURCE_URL });
-
     const { agencyId, electionDate } = options;
-    const agency = ALL_AGENCIES.find((agency) => agency.id === agencyId);
 
-    // console.log({ ALL_AGENCIES });
+    const agency = await this.agencyStorageService.getAgency(agencyId);
+    // const election = await this.agencyStorageService.getElection(agencyId, electionDate);
+    // const { id: electionId } = election;
 
-    console.log({ agency });
-
+    // needto to start with election id of an election already in storage then get its agency by election id.
     if (!agency) return;
 
-    const result = await client.query({
-      query: GET_CANDIDATES,
-      variables: {
-        input: {
-          electionDate: electionDate,
-          source: {},
-        },
-      },
-    });
+    const { url } = agency;
+    const downloadElections = this.candidateDownloadService.getCandidates(
+      url,
+      electionDate,
+    );
 
-    console.log({ result: result.data.candidates });
+    // const candidates = this.addElectionIdToCandidates(electionId, downloadElections)
 
-    // try {
-    //   console.info('Update ... Complete');
-    // } catch (error) {
-    //   console.error('Error updating ...');
-    //   console.error({ error });
-    // }
+  }
+
+  addElectionIdToCandidates(
+    electionId: number,
+    candidates: CandidateDownload[],
+  ): CandidateInput[] {
+    return candidates.map((candidate) => ({
+      ...candidate,
+      electionId: electionId,
+    }));
   }
 }

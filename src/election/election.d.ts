@@ -1,5 +1,5 @@
 export interface Election {
-  idd: number;
+  id: number;
   date: string;
   type: string;
 }

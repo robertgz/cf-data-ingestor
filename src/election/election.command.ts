@@ -11,7 +11,7 @@ export interface ElectionCommandOptions {
 @Command({
   name: 'election-update',
   description:
-    'Fetch a list of elections and perform a GraphQL mutation to the storage API.',
+    'Download a list of elections and then send them to the storage service.',
 })
 export class ElectionCommand extends CommandRunner {
   constructor(private readonly electionService: ElectionService) {
@@ -23,14 +23,17 @@ export class ElectionCommand extends CommandRunner {
     options: ElectionCommandOptions,
   ): Promise<void> {
     console.log({ options });
+
     const { agencyId } = options;
 
     if (!agencyId) {
-      console.log(`Error: missing agencyId`);
+      console.log(`Error: argument agencyId is required`);
       return;
     }
 
-    const result = await this.electionService.addElections(agencyId);
+    const result = await this.electionService.downloadAndStoreElections(
+      agencyId,
+    );
 
     if (result) {
       console.log(

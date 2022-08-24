@@ -2,17 +2,17 @@ import { Command, CommandRunner, Option } from 'nest-commander';
 import { CandidateService } from './candidate.service';
 
 export interface CandidateCommandOptions {
-  agencyId: string;
+  agencyId: number;
   electionDate: string;
 }
 
-// Run: node dist/apps/data-e-file/main candidate-update  -aid CSD-EFILE-e2uOVQqDJd -e 06/07/2022
-// ts-node src/main.ts candidate-update -aid CSD-EFILE-e2uOVQqDJd -e 06/07/2022
+// Run: node dist/apps/data-e-file/main candidate-update  -aid 1 -e 06/07/2022
+// ts-node src/main.ts candidate-update -aid 1 -e 06/07/2022
 
 @Command({
   name: 'candidate-update',
   description:
-    'Fetch a list of candidates for a given election and perform a GraphQL mutation to the primary API.',
+    'Fetch a list of candidates for a given election and agency then perform a GraphQL mutation to the primary API.',
 })
 export class CandidateCommand extends CommandRunner {
   constructor(private readonly candidateService: CandidateService) {
@@ -35,11 +35,11 @@ export class CandidateCommand extends CommandRunner {
   }
 
   @Option({
-    flags: '-aid, --agencyId <string>',
+    flags: '-aid, --agencyId <number>',
     description: `Id of the agency`,
   })
-  id(val: string): string {
-    return val;
+  id(val: string): number {
+    return parseInt(val);
   }
 
   @Option({
